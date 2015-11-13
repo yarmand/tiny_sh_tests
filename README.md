@@ -3,6 +3,8 @@
 ## usage
 
 ```sh
+#!/bin/bash
+
 source $SOME_PLACE_YOUR_STORE_CODE/tiny_sh_tests/test_init.sh
 function my_setup()
 {
