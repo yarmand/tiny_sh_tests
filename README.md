@@ -41,4 +41,6 @@ else
   failure $LINENO 'it should greet people'
 fi
 
+###
+finish
 ```
