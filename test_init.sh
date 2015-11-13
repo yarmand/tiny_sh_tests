@@ -4,6 +4,7 @@ NOCOLOR="\033[0m"
 
 NB_FAILURES=0
 NB_TESTS=0
+IN_TEST='FALSE'
 
 function sucess()
 {
@@ -26,6 +27,11 @@ function failure()
 
 function setup()
 {
+  teardown
+  IN_TEST='TRUE'
+  if [ -n "$1" ] ; then
+    printf "\n=== TEST: $1"
+  fi
   RUN_STDOUT=/tmp/$$_stdout
   RUN_STDERR=/tmp/$$_stderr
   my_setup
@@ -33,11 +39,14 @@ function setup()
 
 function teardown()
 {
-  rm -f $RUN_STDOUT
-  rm -f $RUN_STDERR
-  NB_TESTS=`expr $NB_TESTS + 1`
-  unstub_all
-  my_teardown
+  if [ $IN_TEST = 'TRUE' ] ; then
+    rm -f $RUN_STDOUT
+    rm -f $RUN_STDERR
+    NB_TESTS=`expr $NB_TESTS + 1`
+    unstub_all
+    my_teardown
+    IN_TEST='FALSE'
+  fi
 }
 
 function run()
@@ -53,6 +62,7 @@ function source_run()
 
 function finish()
 {
+  teardown
   printf "\n"
   if [[ $NB_FAILURES -gt 0 ]] ; then
     printf "$RED Finished $NB_TESTS tests with $NB_FAILURES failure $NOCOLOR"
